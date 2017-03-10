@@ -28,7 +28,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$.ajax({
+	/*$.ajax({
 		url : "http://bitcoin.mubiz.com/blockchaininfo ",
 		dataType : "json",
 		contentType : "application/json; charset=utf-8",
@@ -37,7 +37,7 @@ $(document).ready(function() {
 		async : false,
 
 		success : function(data) {
-			$('#bitcoin_block_number').append(data.height);
+			$('#bitcoin_block_number').append(data.difficulty);
 		},
 
 		error : function(xhr, status, err) {
@@ -94,7 +94,7 @@ $(document).ready(function() {
 		error : function(xhr, status, err) {
 			$('#bitcoin_block_number').append(err+" N/A");
 		}
-	});
+	});*/
 });
 
 
