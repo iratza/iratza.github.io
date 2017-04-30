@@ -1,46 +1,97 @@
-<html>
-<head>
-	<script type = "text/javascript" src="../js/script.js" defer></script>
-	<title>Page_Bitcoin</title>
-	<link rel ="stylesheet" media = all href = "css/style.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	   <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-	--></head>
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+	<meta charset="utf-8" />
+		<title>Finance</title>
+		<!-- Feuille de style mise en page/forme -->
+		<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+		<link rel="stylesheet" href="styles/style_basique.css" type="text/css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	</head>
+		
 	<body>
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="#">TP_IF_Guillem_RONDOLE_Emmanuel_FRESNEAU</a>
-				</div>
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="../index.html">Home</a></li>
-					<li><a href="bitcoin/index.html">Bitcoin</a></li>
-					<!--li><a href="#">Page 2</a></li>
-					<li><a href="#">Page 3</a></li!-->
-					</ul>
-				</div>
-			</nav>
-			<h1>Page Du Bitcoin (blocks)</h1>
-			<br>
-			<a href="http://www.w3schools.com">Apprendre le html en douceur</a>
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 col-xs-6">
-						<pre>
-							
-								<span id="bitcoin_block_number"></span>
-							
-							<div> /bitcoin</div>
-						</pre>
-					</div>
-				</div>
+	
+	<!-- NavBar !-->
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <a class="navbar-brand" href="index.html">Paul & Hippo</a>
+		</div>
+		<ul class="nav navbar-nav">
+		  <li><a href="../index.html">Index</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle active" data-toggle="dropdown" href="#">BitCoin
+			<span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="index.html">TD1</a></li>
+				<li><a href="explorer/index.html">Explorer</a></li>
+			</ul>
+		  </li>
+		</ul>
+	  </div>
+	</nav>
+	
+	<!-- Corps de la page -->
+	<div class="row text-center">
+	<h3> Veuillez séléctionner votre choix :</h3>
+		<div class="col-sm-4"></div>
+		<div class="col-sm-4 text-left">
+			<div class="buttonChoose">
+				<input type="button" class="btn btn-primary" value="https://bitcoin.mubiz.com/info" />
 			</div>
-
-			<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-			<script
-			src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+			<div class="buttonChoose">
+				<input type="button" class="btn btn-primary" value="https://bitcoin.mubiz.com/blockchaininfo" />
+			</div>
+			<div class="buttonChoose">
+				<input type="button" class="btn btn-primary" value="https://bitcoin.mubiz.com/mininginfo" />
+			</div>
+			<div class="buttonChoose">
+				<input type="button" class="btn btn-primary" value="https://bitcoin.mubiz.com/peerinfo" />
+			</div>
+		</div>
+		<div class="col-sm-4"></div>
+	</div>
+		
+		<div class="row text-center">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<h3>Résultat de la requète : </h3>
+				<pre  class="text-left">
+					<code id="fileContent">Aucun fichier chargé</code>
+				</pre>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+	<script>
+		
+		function loadFile(file){
+		
+		var xhr = new XMLHttpRequest();
+		
+		xhr.open('GET', file);
+		
+		xhr.addEventListener('readystatechange', function(){
+		
+			 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) { // Si le fichier est chargé sans erreur
+			 var myObj = xhr.responseText; // on récupère le résultat de la requête
+			 var jsonPretty = JSON.stringify(JSON.parse(myObj),null,2); // on parse le résultat de la requête
+             document.getElementById('fileContent').innerHTML =  jsonPretty ; // on affiche
+        }
+		});
+		xhr.send(null); // La requête est prête, on envoie tout !
+		}
+		(function() { // Comme d'habitude, une IIFE pour éviter les variables globales
+    var inputs = document.getElementsByTagName('input'),
+        inputsLen = inputs.length;
+    for (var i = 0; i < inputsLen; i++) {
+        inputs[i].addEventListener('click', function() {
+            loadFile(this.value); // à chaque clique, un fichier sera chargé dans la page
+        });
+    }
+})();
+	
+	</script>
 	</body>
-</html>  
-
-
+</html>
