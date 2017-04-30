@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+	<head>
+	<meta charset="utf-8" />
+		<title>Finance</title>
+		<!-- Feuille de style mise en page/forme -->
+		<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+		<link rel="stylesheet" href="../../styles/style_basique.css" type="text/css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	</head>
+		
+	<body>
+	
+	<!-- NavBar !-->
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <a class="navbar-brand" href="index.html">Paul & Hippo</a>
+		</div>
+		<ul class="nav navbar-nav">
+		  <li><a href="../../index.html">Index</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle active" data-toggle="dropdown" href="#">BitCoin
+			<span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="../index.html">TD1</a></li>
+				<li><a href="index.html">Explorer</a></li>
+			</ul>
+		  </li>
+		</ul>
+	  </div>
+	</nav>
+	
+	<!-- Corps de la page -->
+	<div class="container-fluid text-center">
+	  <h2>Requête</h2>
+		<div class="form-group" style="padding-bottom : 40px;">
+		  <label class="control-label col-sm-3" for="adresse">Adresse</label>
+		  <div class="col-sm-6">
+			<input type="text" class="form-control" id="adresse" placeholder="Entrer une adresse">
+		  </div>
+		  <div class="text-left col-sm-3"> <button id="valider1"  class="btn btn-default">Valider</button> </div>
+		</div>
+		<div class="form-group" style="padding-bottom : 40px;">
+		  <label class="control-label col-sm-3" for="hashTransaction">Hash de transaction</label>
+		  <div class="col-sm-6">
+			<input type="text" class="form-control" id="hashTransaction" placeholder="Entrer un hash de transaction">
+		  </div>
+		  <div class="text-left col-sm-3"> <button id="valider2"  class="btn btn-default">Valider</button> </div>
+		</div>
+		<div class="form-group" style="padding-bottom : 40px;">
+		  <label class="control-label col-sm-3" for="hashBloc">Hash d'un bloc</label>
+		  <div class="col-sm-6">
+			<input type="text" class="form-control" id="hashBloc" placeholder="Entrer un hash d'un bloc">
+		  </div>
+		  <div class="text-left col-sm-3"> <button id="valider3"  class="btn btn-default">Valider</button> </div>
+		</div>
+		<div class="form-group" style="padding-bottom : 40px;">
+		  <label class="control-label col-sm-3" for="numeroBloc">Index (numéro) d'un bloc</label>
+		  <div class="col-sm-6">
+			<input type="text" class="form-control" id="numeroBloc" placeholder="Entrer un numéro d'un bloc">
+		  </div>
+		  <div class="text-left col-sm-3"> <button id="valider4"  class="btn btn-default">Valider</button> </div>
+		</div>
+	
+		<div class="row text-center">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<h3>Résultat de la requète : </h3>
+				<pre  class="text-left">
+					<code id="fileContent">Aucun fichier chargé</code>
+				</pre>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+  </div>
+	<script>
+		var valider1 = document.getElementById("valider1");
+		var valider2 = document.getElementById("valider2");
+		var valider3 = document.getElementById("valider3");
+		var valider4 = document.getElementById("valider4");
+
+		
+        valider1.addEventListener('click', function() { 
+		var code = document.getElementById("adresse").value;
+		var isAddress = /^[0-9a-zA-Z]{34}$/.test(code);
+		if(isAddress == true)
+		{
+			var requete = "https://bitcoin.mubiz.com/address/"  + code + "/"; 
+			loadFile(requete);
+		}})
+        valider2.addEventListener('click', function() { 
+		var code = document.getElementById("hashTransaction").value;
+		var requete = "https://bitcoin.mubiz.com/transaction/" + code + "/";
+		loadFile(requete); })
+        valider3.addEventListener('click', function() { 
+		var code = document.getElementById("hashBloc").value;
+		var requete = "https://bitcoin.mubiz.com/block_hash/" + code + "/" ;
+		loadFile(requete); })
+        valider4.addEventListener('click', function() {
+		var code = document.getElementById("numeroBloc").value;
+		var requete = "https://bitcoin.mubiz.com/block_index/" + code + "/";
+		loadFile(requete); })
+
+	function loadFile(file){
+		
+		var xhr = new XMLHttpRequest();
+
+			xhr.open('GET', file);
+			
+			xhr.addEventListener('readystatechange', function(){
+				 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) { // Si le fichier est chargé sans erreur				
+				var myObj = xhr.responseText; // on récupère le résultat de la requête
+				 var jsonPretty = JSON.stringify(JSON.parse(myObj),null,2); // on parse le résultat de la requête
+				 
+				 
+				//output(syntaxHighlight(jsonPretty));
+				 document.getElementById('fileContent').innerHTML =  syntaxHighlight(jsonPretty) ; // on affiche
+
+			}
+
+			});
+
+			xhr.send(null); // La requête est prête, on envoie tout !
+		}
+		
+		/* PARTIE 2 */ 
+		
+		function output(inp) {
+			document.body.appendChild(document.createElement('pre')).innerHTML = inp;
+		}
+
+
+function syntaxHighlight(json) {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+		
+	</script>
+	</body>
+</html>
